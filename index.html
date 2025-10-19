@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phonebook App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>📞 Phonebook</h1>
+
+    <form id="contactForm">
+      <input type="text" id="name" placeholder="Name" required />
+      <input type="text" id="phone" placeholder="Phone Number" required />
+      <button type="submit">Save Contact</button>
+      <button type="edit">edit</button>
+      <button type="delete">delete</button>
+    </form>
+
+    <div id="contacts">
+      <!-- Contacts will appear here -->
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

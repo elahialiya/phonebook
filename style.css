@@ -1,0 +1,78 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  background-color: #a10773;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#contacts .contact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 10px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+}
+
+.contact-info {
+  flex: 1;
+}
+
+.actions button {
+  margin-left: 8px;
+  background-color: #6c757d;
+}
+
+.actions button:hover {
+  background-color: #495057;
+}
+
+.actions .delete-btn {
+  background-color: #dc3545;
+}
+
+.actions .delete-btn:hover {
+  background-color: #b02a37;
+}
