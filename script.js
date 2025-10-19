@@ -1,106 +1,124 @@
 const API = "https://phonebook-server-m40k.onrender.com";
+ 
 
-const contactsContainer = document.getElementById("contacts");
-const form = document.getElementById("contactForm");
-const nameInput = document.getElementById("name");
-const phoneInput = document.getElementById("phone");
+const loader = document.getElementById("loader");
+const form = document.getElementById("saveForm");
+const updateForm = document.getElementById("updateForm");
+let contactsData = [];
+let contactId = "";
 
-let isEditing = false;
-let editingId = null;
 
-// Fetch and render all contacts
-async function fetchContacts() {
-  try {
-    const res = await fetch(`${API}/contacts`);
-    const contacts = await res.json();
-    contactsContainer.innerHTML = "";
-    contacts.forEach(renderContact);
-  } catch (error) {
-    console.error("Failed to load contacts", error);
-  }
-}
-
-// Render a contact
-function renderContact(contact) {
-  const div = document.createElement("div");
-  div.className = "contact";
-  div.dataset.id = contact.id;
-
-  const info = document.createElement("div");
-  info.className = "contact-info";
-  info.textContent = `${contact.name}: ${contact.phone}`;
-
-  const actions = document.createElement("div");
-  actions.className = "actions";
-
-  const editBtn = document.createElement("button");
-  editBtn.textContent = "Edit";
-  editBtn.onclick = () => {
-    nameInput.value = contact.name;
-    phoneInput.value = contact.phone;
-    isEditing = true;
-    editingId = contact.id;
-    form.querySelector("button").textContent = "Update Contact";
-  };
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "Delete";
-  deleteBtn.className = "delete-btn";
-  deleteBtn.onclick = async () => {
-    try {
-      await fetch(`${API}/contacts/${contact.id}`, { method: "DELETE" });
-      fetchContacts();
-    } catch (err) {
-      console.error("Failed to delete contact", err);
-    }
-  };
-
-  actions.appendChild(editBtn);
-  actions.appendChild(deleteBtn);
-
-  div.appendChild(info);
-  div.appendChild(actions);
-
-  contactsContainer.appendChild(div);
-}
-
-// Handle form submit
+// saving number 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const name = nameInput.value.trim();
-  const phone = phoneInput.value.trim();
-
-  if (!name || !phone) {
-    alert("Please fill in both fields.");
-    return;
-  }
+  const fullName = document.getElementById("fullName").value.trim();
+  const phoneNumber = document.getElementById("phoneNumber").value.trim();
+  loader.style.display = "block";
 
   try {
-    if (isEditing) {
-      // Update contact
-      await fetch(`${API}/contacts/${editingId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone })
-      });
-      isEditing = false;
-      editingId = null;
-      form.querySelector("button").textContent = "Save Contact";
-    } else {
-      // Add contact
-      await fetch(`${API}/contacts`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone })
-      });
+    const res = await fetch(`${API}/api/save/contact`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ fullName, phoneNumber }),
+    });
+    if (res) {
+      const data = await res.json();
+      alert(data.message);
+      getAllContacts();
+      document.querySelector("form").reset();
     }
-
-    form.reset();
-    fetchContacts();
-  } catch (err) {
-    console.error("Failed to save contact", err);
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  } finally {
+    loader.style.display = "none";
   }
 });
 
-// Initial load
-fetchContacts();
+const showContacts = document.getElementById("showContacts");
+const contacts = document.getElementById("contacts");
+showContacts.addEventListener("click", getAllContacts);
+
+
+// fetching all contacts 
+async function getAllContacts() {
+  try {
+    const res = await fetch(API + "/api/all/contacts");
+    const data = await res.json();
+    contacts.innerHTML = "";
+    data.forEach((element) => {
+      contacts.innerHTML += `<li>
+      ${element.fullName} <br> ${element.phoneNumber}
+       <span onclick="editFunction('${element._id}')">Edit</span>
+        <span onclick="deleteContact('${element._id}')" class="del">Delete</span>
+        </li>`;
+    });
+
+    contactsData = data;
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+}
+
+function editFunction(id) {
+  contactId = id;
+  const data = contactsData.find((item) => item._id === id);
+  form.style.display = "none";
+  updateForm.style.display = "block";
+  document.getElementById("updateName").value = data.fullName;
+  document.getElementById("updateNumber").value = data.phoneNumber;
+}
+
+
+// edit contact details 
+updateForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const fullName = document.getElementById("updateName").value;
+  const phoneNumber = document.getElementById("updateNumber").value;
+  loader.style.display = "block";
+  loader.textContent = "UPDATING...";
+
+  try {
+    const res = await fetch(`${API}/api/update/contact/${contactId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ fullName, phoneNumber }),
+    });
+    if (res) {
+      const data = await res.json();
+      alert(data.message);
+      getAllContacts();
+      form.style.display = "block";
+      updateForm.style.display = "none";
+      document.getElementById("updateForm").reset();
+    }
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  } finally {
+    loader.style.display = "none";
+  }
+});
+
+
+// delete contact 
+async function deleteContact(delId) {
+  try {
+    const res = await fetch(`${API}/api/delete/contact/${delId}`, {
+      method: "DELETE",
+    });
+    if (res) {
+      const data = await res.json();
+      alert(data.message);
+      getAllContacts();
+    }
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+}

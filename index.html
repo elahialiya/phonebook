@@ -1,28 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Phonebook App</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>📞 Phonebook</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
 
-    <form id="contactForm">
-      <input type="text" id="name" placeholder="Name" required />
-      <input type="text" id="phone" placeholder="Phone Number" required />
-      <button type="submit">Save Contact</button>
-      <button type="edit">edit</button>
-      <button type="delete">delete</button>
-    </form>
+<!-- form  -->
+    <div>
+      <h4>phone book</h4>
+      <!-- save form  -->
+      <form id="saveForm">
+        <input type="text" name="fullName" id="fullName" required /><br>
+        <input type="number" name="phoneNumber" id="phoneNumber" required /><br>
+        <button type="submit">save contact</button>
+      </form>
 
-    <div id="contacts">
-      <!-- Contacts will appear here -->
+<!-- update form  -->
+  <form id="updateForm">
+        <input type="text" name="updateName" id="updateName" required /><br>
+        <input type="number" name="updateNumber" id="updateNumber" required /><br>
+        <button type="submit">update contact</button>
+      </form>
     </div>
-  </div>
 
-  <script src="script.js"></script>
-</body>
+    <span id="loader" style="margin-top: 10px;">Saving Number...</span><br>
+
+    <button id="showContacts">show contacts</button><br>
+
+<!-- all contacts  -->
+<ul id="contacts">
+</ul>
+
+    <script src="script.js"></script>
+  </body>
 </html>
